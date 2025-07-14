@@ -56,6 +56,23 @@ return [
     'welcome' => 'Benvenuto!',
     'use_sidebar' => 'Utilizza la barra laterale per creare, modificare od eliminare contenuti.',
 
+    'error_page' => [
+        'title' => 'Errore :error',
+        'button' => 'Portami a casa',
+        'message_4xx' => 'Si prega di <a :href_back>tornare indietro</a> o tornare alla <a :href_homepage>nostra homepage</a>.',
+        'message_500' => 'Si è verificato un errore interno del server. Se l\'errore persiste, contattare il team di sviluppo.',
+        'message_503' => 'Il server è sovraccarico o in manutenzione. Riprova più tardi.',
+        '400' => 'Richiesta errata.',
+        '401' => 'Azione non autorizzata.',
+        '403' => 'Vietato.',
+        '404' => 'Pagina non trovata.',
+        '405' => 'Metodo non consentito.',
+        '408' => 'Timeout della richiesta.',
+        '429' => 'Troppe richieste.',
+        '500' => 'Non sei tu, sono io.',
+        '503' => 'Server in manutenzione o sovraccarico.',
+    ],
+
     'password_reset' => [
         'greeting' => 'Ciao!',
         'subject' => 'Notifica di reset della password',
