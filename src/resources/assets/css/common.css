@@ -1,5 +1,7 @@
 :root {
     --table-row-hover: #f2f1ff;
+    --select2-selected-item-background: #7c69ef;
+    --select2-selected-item-color: #fff;
 }
 
 .sidebar .nav-dropdown-items .nav-dropdown {
@@ -941,8 +943,8 @@ div.dt-scroll-body {
 }
 
 .select2-container--bootstrap .select2-results__option--highlighted[aria-selected] {
-    background-color: #3875d7;
-    color: #fff;
+    background-color: var(--select2-selected-item-background);
+    color: var(--select2-selected-item-color);
 }
 
 .select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
@@ -1338,4 +1340,8 @@ div.dt-scroll-body {
     .bp-datagrid-item.size-12 {
         grid-column: span 12 / span 12;
     }
+}
+
+.dt-container .crud_bulk_actions_checkbox, .dt-container table.dataTable .crud_bulk_actions_checkbox {
+    margin: 0 0.6rem 0 0.45rem;
 }
