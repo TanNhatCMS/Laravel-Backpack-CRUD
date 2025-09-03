@@ -580,6 +580,13 @@ function setupTableUI(tableId, config) {
         }
     });
     window.dispatchEvent(event);
+    
+    // Initialize dropdown positioning fix if table has dropdown buttons
+    if ($(`#${tableId}`).data('has-line-buttons-as-dropdown')) {
+        setTimeout(() => {
+            initDatatableDropdowns(tableId);
+        }, 100);
+    }
 }
 
 // Function to set up table event handlers
@@ -831,7 +838,6 @@ document.addEventListener('backpack:filters:cleared', function (event) {
 document.addEventListener('backpack:filter:changed', function (event) {
     const tableId = event.detail.componentId || '';
     if (!tableId) {
-        console.log('No componentId provided in event detail. Exiting.');
         return;
     }
 
@@ -912,14 +918,114 @@ function formatActionColumnAsDropdown(tableId) {
         // Only create dropdown if there are items to drop
         if (dropdownItems.length > 0) {
             // Wrap the cell with the component needed for the dropdown
-            actionCell.wrapInner('<div class="nav-item dropdown"></div>');
-            actionCell.wrapInner('<div class="dropdown-menu dropdown-menu-left"></div>');
+            actionCell.wrapInner('<div class="dropdown-menu"></div>');
+            actionCell.wrapInner('<div class="dropdown"></div>');
 
-            actionCell.prepend('<a class="btn btn-sm px-2 py-1 btn-outline-primary dropdown-toggle actions-buttons-column" href="#" data-toggle="dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Actions</a>');
+            actionCell.prepend('<button class="btn btn-sm px-2 py-1 btn-outline-primary dropdown-toggle actions-buttons-column" type="button" data-bs-toggle="dropdown" data-bs-boundary="viewport" data-bs-placement="bottom-start" aria-expanded="false">Actions</button>');
             
             const remainingButtons = actionButtons.slice(0, buttonsToShowBeforeDropdown);
             actionCell.prepend(remainingButtons);
         }
     });
+}
+
+
+function initDatatableDropdowns(tableId) {    
+    // Wait for table to be ready
+    setTimeout(function() {        
+        const table = document.getElementById(tableId);
+        if (!table) {
+            return;
+        }
+        
+        $(document).ready(function() {            
+            // Use event delegation for dynamically created elements
+            $('#' + tableId).off('click.lineActions').on('click.lineActions', '.actions-buttons-column.dropdown-toggle', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const $this = $(this);
+                const $dropdown = $this.next('.dropdown');
+                const $menu = $dropdown.find('.dropdown-menu');
+                
+                // If no menu found, let's create one or find it differently
+                if ($menu.length === 0) {                    
+                    // Try different selectors
+                    const $ul = $dropdown.find('ul');
+                    const $allMenus = $('.dropdown-menu');
+                    
+                    // Try to find the menu as a sibling or next element
+                    const $nextSibling = $this.next();                    
+                    if ($ul.length > 0) {
+                        $ul.addClass('dropdown-menu show').show();
+                        
+                        // Position the UL
+                        const buttonRect = this.getBoundingClientRect();
+                        $ul.css({
+                            'position': 'fixed',
+                            'top': (buttonRect.bottom + 5) + 'px',
+                            'left': buttonRect.left + 'px',
+                            'z-index': '999999',
+                            'display': 'block',
+                            'background': 'white',
+                            'border': '1px solid #dee2e6',
+                            'border-radius': '0.375rem',
+                            'box-shadow': '0 0.5rem 1rem rgba(0, 0, 0, 0.15)',
+                            'min-width': '160px',
+                            'padding': '0.5rem 0'
+                        });
+                        
+                        return;
+                    }
+                }
+                
+                $('#' + tableId + ' .actions-buttons-column').next('.dropdown').find('.dropdown-menu').removeClass('show').hide();
+                
+                // Show this dropdown
+                $menu.addClass('show').show();
+                
+                // Force positioning
+                const buttonRect = this.getBoundingClientRect();
+                const menuHeight = $menu.outerHeight() || 150;
+                const windowHeight = $(window).height();
+                
+                let top = buttonRect.bottom + window.scrollY + 5;
+                if (top + menuHeight > windowHeight + window.scrollY) {
+                    top = buttonRect.top + window.scrollY - menuHeight - 5;
+                }
+                
+                // Apply positioning with maximum override
+                const cssProps = {
+                    'position': 'fixed',
+                    'top': (buttonRect.bottom + 5) + 'px',
+                    'left': buttonRect.left + 'px',
+                    'z-index': '999999',
+                    'display': 'block',
+                    'background': 'white',
+                    'border': '1px solid #dee2e6',
+                    'border-radius': '0.375rem',
+                    'box-shadow': '0 0.5rem 1rem rgba(0, 0, 0, 0.15)',
+                    'min-width': '160px',
+                    'padding': '0.5rem 0'
+                };
+                
+                $menu.css(cssProps);
+                
+                // Auto-position if going off screen
+                if (buttonRect.bottom + menuHeight > windowHeight) {
+                    $menu.css('top', (buttonRect.top - menuHeight - 5) + 'px');
+                }                
+            });
+            
+            // Close on outside click, but only for line action dropdowns in this table
+            $(document).off('click.lineActions' + tableId).on('click.lineActions' + tableId, function(e) {
+                // Only close line action dropdowns, not export button dropdowns
+                if (!$(e.target).closest('#' + tableId + ' .actions-buttons-column').length && 
+                    !$(e.target).closest('#' + tableId + ' .actions-buttons-column').next('.dropdown').length) {
+                    $('#' + tableId + ' .actions-buttons-column').next('.dropdown').find('.dropdown-menu').removeClass('show').hide();
+                }
+            });
+        });
+    }, 500);
 }
 </script>
