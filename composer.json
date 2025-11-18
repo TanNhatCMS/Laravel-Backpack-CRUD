@@ -36,7 +36,7 @@
     ],
     "require": {
         "laravel/framework": "^12",
-        "backpack/basset": "^2.0.0-beta",
+        "tannhatcms/basset": "^1.4.0",
         "creativeorange/gravatar": "^1.0",
         "prologue/alerts": "^1.0",
         "doctrine/dbal": "^4.0",
@@ -76,7 +76,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.0-dev"
+            "dev-master": "6.0-dev"
         },
         "laravel": {
             "providers": [
