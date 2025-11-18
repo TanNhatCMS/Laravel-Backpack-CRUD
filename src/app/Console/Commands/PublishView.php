@@ -33,7 +33,7 @@ class PublishView extends Command
      *
      * @var string
      */
-    public $sourcePath = 'vendor/backpack/crud/src/resources/views/';
+    public $sourcePath = 'vendor/tannhatcms/crud/src/resources/views/';
 
     /**
      * The directory where the views will pe published TO.
@@ -95,8 +95,8 @@ class PublishView extends Command
             if ($canCopy) {
                 $path = pathinfo($copiedFile);
 
-                if (! file_exists($path['dirname'])) {
-                    mkdir($path['dirname'], 0755, true);
+                if (!file_exists($path['dirname']) && !mkdir($concurrentDirectory = $path['dirname'], 0755, true) && !is_dir($concurrentDirectory)) {
+                    throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
                 }
 
                 if (copy($sourceFile, $copiedFile)) {

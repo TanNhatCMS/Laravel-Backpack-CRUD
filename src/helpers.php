@@ -1,6 +1,7 @@
 <?php
 
 use Backpack\Basset\Facades\Basset;
+use Composer\InstalledVersions;
 use Creativeorange\Gravatar\Facades\Gravatar;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -204,7 +205,7 @@ if (! function_exists('backpack_auth')) {
 if (! function_exists('backpack_user')) {
     /*
      * Returns back a user instance without
-     * the admin guard, however allows you
+     * the admin guard, however, allows you
      * to pass in a custom guard if you like.
      */
     function backpack_user()
@@ -251,9 +252,9 @@ if (! function_exists('backpack_view')) {
             'backpack.ui::'.$view,
         ];
 
-        foreach ($viewPaths as $view) {
-            if (view()->exists($view)) {
-                return $view;
+        foreach ($viewPaths as $views) {
+            if (view()->exists($views)) {
+                return $views;
             }
         }
 
@@ -411,10 +412,12 @@ if (! function_exists('backpack_pro')) {
         if (app()->runningUnitTests()) {
             return true;
         }
-        if (! \Composer\InstalledVersions::isInstalled('backpack/pro')) {
-            return false;
+        if (InstalledVersions::isInstalled('tannhatcms/pro')) {
+            return InstalledVersions::getVersion('tannhatcms/pro');
         }
-
-        return \Composer\InstalledVersions::getVersion('backpack/pro');
+        if (InstalledVersions::isInstalled('backpack/pro')) {
+            return InstalledVersions::getVersion('backpack/pro');
+        }
+        return false;
     }
 }

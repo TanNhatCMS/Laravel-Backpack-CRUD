@@ -19,7 +19,7 @@ Route::group(
         'prefix' => config('backpack.base.route_prefix'),
     ],
     function () {
-        // if not otherwise configured, setup the auth routes
+        // if not otherwise configured, set up the auth routes
         if (config('backpack.base.setup_auth_routes')) {
             // Authentication Routes...
             Route::get('login', 'Auth\LoginController@showLoginForm')->name('backpack.auth.login');
@@ -31,7 +31,7 @@ Route::group(
             Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('backpack.auth.register');
             Route::post('register', 'Auth\RegisterController@register');
 
-            // if not otherwise configured, setup the password recovery routes
+            // if not otherwise configured, set up the password recovery routes
             if (config('backpack.base.setup_password_recovery_routes', true)) {
                 Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('backpack.auth.password.reset');
                 Route::post('password/reset', 'Auth\ResetPasswordController@reset');
@@ -46,13 +46,13 @@ Route::group(
             }
         }
 
-        // if not otherwise configured, setup the dashboard routes
+        // if not otherwise configured, set up the dashboard routes
         if (config('backpack.base.setup_dashboard_routes')) {
             Route::get('dashboard', 'AdminController@dashboard')->name('backpack.dashboard');
             Route::get('/', 'AdminController@redirect')->name('backpack');
         }
 
-        // if not otherwise configured, setup the "my account" routes
+        // if not otherwise configured, set up the "my account" routes
         if (config('backpack.base.setup_my_account_routes')) {
             Route::get('edit-account-info', 'MyAccountController@getAccountInfoForm')->name('backpack.account.info');
             Route::post('edit-account-info', 'MyAccountController@postAccountInfoForm')->name('backpack.account.info.store');

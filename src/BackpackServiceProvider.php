@@ -20,7 +20,7 @@ class BackpackServiceProvider extends ServiceProvider
 {
     use Stats;
 
-    protected $commands = [
+    protected array $commands = [
         app\Console\Commands\Install::class,
         app\Console\Commands\AddMenuContent::class,
         app\Console\Commands\AddCustomRouteContent::class,
@@ -422,7 +422,7 @@ class BackpackServiceProvider extends ServiceProvider
             $themeErrorPaths = $viewFinderHints[$themeNamespace] ?? [];
             $themeErrorPaths = $themeNamespace === $themeFallbackNamespace ? $themeErrorPaths :
                 array_merge($viewFinderHints[$themeFallbackNamespace] ?? [], $themeErrorPaths);
-            $uiErrorPaths = [base_path('vendor/backpack/crud/src/resources/views/ui')];
+            $uiErrorPaths = [base_path('vendor/tannhatcms/crud/src/resources/views/ui')];
             $themeErrorPaths = array_merge($themeErrorPaths, $uiErrorPaths);
 
             // merge the paths array with the view.paths defined in the application

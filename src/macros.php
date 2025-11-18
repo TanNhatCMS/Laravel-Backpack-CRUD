@@ -1,6 +1,5 @@
 <?php
 
-use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudColumn;
 use Backpack\CRUD\app\Library\CrudPanel\CrudField;
 use Backpack\CRUD\app\Library\Uploaders\Support\RegisterUploadEvents;
@@ -8,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
 /**
- * This macro adds the ability to convert a dot.notation string into a [bracket][notation] with some special
+ * This macro adds the ability to convert a dot. Notation string into a [bracket][notation] with some special
  * options that helps us in our usecases.
  *
  * - $ignore: useful when you want to convert a laravel validator rule for nested items and you
@@ -86,7 +85,7 @@ if (! CrudColumn::hasMacro('linkTo')) {
         }
 
         // calculate the parameters we'll be using for the route() call
-        // (eg. if there's only one parameter and user didn't provide it, we'll assume it's the entry's related key)
+        // (eg. if there's only one parameter and the user didn't provide it, we'll assume it's the entry's related key)
         $parameters = (function () use ($parameters, $routeInstance, $route) {
             $expectedParameters = $routeInstance->parameterNames();
 

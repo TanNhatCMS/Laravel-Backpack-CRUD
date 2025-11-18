@@ -5,7 +5,13 @@ namespace Backpack\CRUD;
 use Backpack\CRUD\app\Http\Controllers\Contracts\CrudControllerContract;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
+use Closure;
+use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\Request;
+use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Facade;
+use ReflectionException;
 
 /**
  * CrudPanelManager - Central registry and factory for CRUD panels.
@@ -179,14 +185,15 @@ final class CrudPanelManager
     }
 
     /**
-     * Setup an operation in isolation without affecting the main CRUD panel state.
+     * Set up an operation in isolation without affecting the main CRUD panel state.
      * This creates a temporary context for operation setup without state interference.
      *
-     * @param  object  $controller  The controller instance
-     * @param  string  $operation  The operation to setup
-     * @param  CrudPanel  $crud  The CRUD panel instance
+     * @param object $controller The controller instance
+     * @param string $operation The operation to set up
+     * @param CrudPanel $crud The CRUD panel instance
+     * @throws ReflectionException
      */
-    private function setupIsolatedOperation($controller, string $operation, CrudPanel $crud): void
+    private function setupIsolatedOperation(object $controller, string $operation, CrudPanel $crud): void
     {
         // Store the complete current state
         $originalOperation = $crud->getOperation();
@@ -223,17 +230,17 @@ final class CrudPanelManager
             try {
                 // Skip complex objects that Laravel generates dynamically
                 if (is_object($value) && (
-                    $value instanceof \Illuminate\Routing\UrlGenerator ||
-                    $value instanceof \Illuminate\Http\Request ||
-                    $value instanceof \Illuminate\Contracts\Foundation\Application ||
-                    $value instanceof \Closure ||
+                    $value instanceof UrlGenerator ||
+                    $value instanceof Request ||
+                    $value instanceof Application ||
+                    $value instanceof Closure ||
                     method_exists($value, '__toString') === false
                 )) {
                     continue;
                 }
 
                 $crud->set($key, $value);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Silently continue with restoration
             }
         }
@@ -288,37 +295,38 @@ final class CrudPanelManager
             try {
                 // Skip complex objects that Laravel generates dynamically
                 if (is_object($value) && (
-                    $value instanceof \Illuminate\Routing\UrlGenerator ||
-                    $value instanceof \Illuminate\Http\Request ||
-                    $value instanceof \Illuminate\Contracts\Foundation\Application ||
-                    $value instanceof \Closure ||
+                    $value instanceof UrlGenerator ||
+                    $value instanceof Request ||
+                    $value instanceof Application ||
+                    $value instanceof Closure ||
                     method_exists($value, '__toString') === false
                 )) {
                     continue;
                 }
 
                 $crud->set($key, $value);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Silently continue with restoration
             }
         }
     }
 
     /**
-     * Setup a specific operation without reinitializing the entire CRUD panel.
+     * Set up a specific operation without reinitializing the entire CRUD panel.
      *
-     * @param  object  $controller  The controller instance
-     * @param  string  $operation  The operation to setup
-     * @param  CrudPanel  $crud  The CRUD panel instance
+     * @param object $controller The controller instance
+     * @param string $operation The operation to set up
+     * @param CrudPanel $crud The CRUD panel instance
+     * @throws ReflectionException
      */
-    private function setupSpecificOperation($controller, string $operation, CrudPanel $crud): void
+    private function setupSpecificOperation(object $controller, string $operation, CrudPanel $crud): void
     {
-        // Setup the specific operation using the existing CrudController infrastructure
+        // Set up the specific operation using the existing CrudController infrastructure
         $crud->setOperation($operation);
 
         $controller->setup();
 
-        // Use the controller's own method to setup the operation properly
+        // Use the controller's own method to set up the operation properly
         $reflection = new \ReflectionClass($controller);
         $method = $reflection->getMethod('setupConfigurationForCurrentOperation');
         $method->setAccessible(true);
@@ -336,8 +344,8 @@ final class CrudPanelManager
     /**
      * Record that an operation has been initialized for a controller.
      *
-     * @param  string  $controller  The controller class name
-     * @param  string  $operation  The operation name (e.g., 'list', 'create', 'update')
+     * @param string $controller The controller class name
+     * @param string|null $operation The operation name (e.g., 'list', 'create', 'update')
      */
     public function storeInitializedOperation(string $controller, ?string $operation): void
     {
@@ -463,17 +471,13 @@ final class CrudPanelManager
         }
 
         if ($controller) {
-            $crudPanel = $this->getActiveCrudPanel($controller);
-
-            return $crudPanel;
+            return $this->getActiveCrudPanel($controller);
         }
 
         $cruds = $this->getCrudPanels();
 
         if (! empty($cruds)) {
-            $crudPanel = end($cruds);
-
-            return $crudPanel;
+            return end($cruds);
         }
 
         $this->cruds[CrudController::class] = new CrudPanel();
