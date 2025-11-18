@@ -1,5 +1,5 @@
 {
-    "name": "backpack/crud",
+    "name": "tannhatcms/crud",
     "type": "library",
     "description": "Quickly build admin interfaces using Laravel, Bootstrap and JavaScript.",
     "keywords": [
@@ -61,6 +61,11 @@
             "**/config"
         ]
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "replace": {
+        "backpack/crud": "^6.8.8"
+    },
     "scripts": {
         "test": "vendor/bin/phpunit --testdox",
         "test-failing": "vendor/bin/phpunit --order-by=defects --stop-on-failure",
@@ -81,8 +86,8 @@
         }
     },
     "suggest": {
-        "backpack/generators": "Required on localhost to easily generate CRUDs, models, controllers etc.",
-        "backpack/filemanager": "Required to use the browse and browse_multiple fields.",
-        "backpack/revise-operation": "Optional operation to remember all entry changes, undo and redo them (aka audit trait)."
+        "tannhatcms/generators": "Required on localhost to easily generate CRUDs, models, controllers etc.",
+        "tannhatcms/filemanager": "Required to use the browse and browse_multiple fields.",
+        "tannhatcms/revise-operation": "Optional operation to remember all entry changes, undo and redo them (aka audit trait)."
     }
 }
