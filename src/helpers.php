@@ -418,6 +418,7 @@ if (! function_exists('backpack_pro')) {
         if (InstalledVersions::isInstalled('backpack/pro')) {
             return InstalledVersions::getVersion('backpack/pro');
         }
+
         return false;
     }
 }

@@ -188,9 +188,10 @@ final class CrudPanelManager
      * Set up an operation in isolation without affecting the main CRUD panel state.
      * This creates a temporary context for operation setup without state interference.
      *
-     * @param object $controller The controller instance
-     * @param string $operation The operation to set up
-     * @param CrudPanel $crud The CRUD panel instance
+     * @param  object  $controller  The controller instance
+     * @param  string  $operation  The operation to set up
+     * @param  CrudPanel  $crud  The CRUD panel instance
+     *
      * @throws ReflectionException
      */
     private function setupIsolatedOperation(object $controller, string $operation, CrudPanel $crud): void
@@ -314,9 +315,10 @@ final class CrudPanelManager
     /**
      * Set up a specific operation without reinitializing the entire CRUD panel.
      *
-     * @param object $controller The controller instance
-     * @param string $operation The operation to set up
-     * @param CrudPanel $crud The CRUD panel instance
+     * @param  object  $controller  The controller instance
+     * @param  string  $operation  The operation to set up
+     * @param  CrudPanel  $crud  The CRUD panel instance
+     *
      * @throws ReflectionException
      */
     private function setupSpecificOperation(object $controller, string $operation, CrudPanel $crud): void
@@ -344,8 +346,8 @@ final class CrudPanelManager
     /**
      * Record that an operation has been initialized for a controller.
      *
-     * @param string $controller The controller class name
-     * @param string|null $operation The operation name (e.g., 'list', 'create', 'update')
+     * @param  string  $controller  The controller class name
+     * @param  string|null  $operation  The operation name (e.g., 'list', 'create', 'update')
      */
     public function storeInitializedOperation(string $controller, ?string $operation): void
     {
