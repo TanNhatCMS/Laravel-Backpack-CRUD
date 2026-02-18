@@ -44,7 +44,7 @@ class Version extends Command
         $packages = InstalledVersions::getInstalledPackages();
         foreach ($packages as $package) {
             if (str_starts_with($package, 'tannhatcms/')) {
-                $this->line($package.': '. InstalledVersions::getPrettyVersion($package));
+                $this->line($package.': '.InstalledVersions::getPrettyVersion($package));
             }
         }
     }

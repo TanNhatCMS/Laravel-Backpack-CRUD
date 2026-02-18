@@ -95,7 +95,7 @@ class PublishView extends Command
             if ($canCopy) {
                 $path = pathinfo($copiedFile);
 
-                if (!file_exists($path['dirname']) && !mkdir($concurrentDirectory = $path['dirname'], 0755, true) && !is_dir($concurrentDirectory)) {
+                if (! file_exists($path['dirname']) && ! mkdir($concurrentDirectory = $path['dirname'], 0755, true) && ! is_dir($concurrentDirectory)) {
                     throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
                 }
 
